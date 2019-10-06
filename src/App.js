@@ -1,9 +1,27 @@
 import React from "react";
 import "./App.css";
 
+const sumOfSquares = number => {
+  let sum = 0;
+  for (let i = 1; i <= number; i++) {
+    sum += i ** 2;
+  }
+
+  return sum;
+};
+
+const squareOfSum = number => {
+  let sum = 0;
+  for (let i = 1; i <= number; i++) {
+    sum += i;
+  }
+
+  return sum ** 2;
+};
+
 const mockApi = number =>
   new Promise(resolve => {
-    setTimeout(() => resolve(number), 1000); // Mocking some amount of latency.
+    setTimeout(() => resolve(squareOfSum(number) - sumOfSquares(number)), 1000); // Mocking some amount of latency.
   });
 
 function App() {
