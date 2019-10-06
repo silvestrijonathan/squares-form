@@ -1,6 +1,11 @@
 import React from "react";
 import "./App.css";
 
+const mockApi = number =>
+  new Promise(resolve => {
+    setTimeout(() => resolve(number), 1000); // Mocking some amount of latency.
+  });
+
 function App() {
   const [value, setValue] = React.useState(0);
   const [error, setError] = React.useState("");
