@@ -16,7 +16,9 @@ Created with create-react-app, so `yarn install` and `yarn start` should be suff
 
 ### Approach Notes
 
-- I would like to speak to my caching strategy here. The problem set did not specifically call for this approach, but in my mind, this would be how a client/server setup would exist for this challenge. If a request is made for a specific number, that number and all the necessary response data would be stored in the database, such that upon returning to their profile they could see their past calculations.
-- While I did not go the full route of setting persistent data up (LocalStorage was a candidate for the solution at one point), I wanted to as closely simulate a stored response experience for repeat calculations as much as possible. This effectively curtailed the Bonus question, since the memoized function handles for the case of re-calculating the value of a number, instead ensuring the datetime, last_datetime, and occurrences fields are updated.
+- I would like to speak to my caching strategy here. The problem set did not specifically call for this approach, but in my mind, this would be how a client/server setup would exist for this use case. If a request is made for a specific number, that number and all the necessary response data would be stored in the database, such that upon returning to their profile they could see their past calculations.
+- While I did not go the full route of setting persistent data up (LocalStorage was a candidate for the solution at one point), I wanted to closely simulate a stored response experience for repeat calculations as much as possible. This effectively curtailed the Bonus question, since the memoized function handles for the case of re-calculating the value of a number, instead ensuring the datetime, last_datetime, and occurrences fields are updated.
+- The trade-off with this approach being that, if we had no constraints on the number size, we'd risk being able to store more than 100 entries in memory.
 - The submittedValue state is used to best simulate the necessary lifecycle transitions for my useEffect hook.
 - I did some setup to prevent memory leaks if the component unmounted for demonstration purposes.
+- No styling for the main component as I felt it was more important for now to get the implementation to the challenge's parameters.
