@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import LoadingSpinner from "./LoadingSpinner";
 
 const createLocalTimeStamp = () => {
   const now = new Date();
@@ -113,11 +113,11 @@ function App() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
-    <div>
+    <div className="App">
       <form onSubmit={handleSubmit}>
         {error && <p>{error}</p>}
         <label htmlFor="number">
@@ -133,11 +133,11 @@ function App() {
       </form>
       {!!responses.length && <h2>Previous API Responses</h2>}
       {responses.map((response, index) => (
-        <div>
+        <div key={index}>
           <h3>
             Request for {response.number} at {response.datetime}
           </h3>
-          <ul key={index}>
+          <ul>
             <li>Datetime: {response.datetime}</li>
             <li>Number: {response.number}</li>
             <li>Value: {response.value}</li>
