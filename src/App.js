@@ -1,6 +1,8 @@
 import React from "react";
 import "./App.css";
 
+const numbersDict = {};
+
 const sumOfSquares = number => {
   let sum = 0;
   for (let i = 1; i <= number; i++) {
@@ -19,27 +21,49 @@ const squareOfSum = number => {
   return sum ** 2;
 };
 
+const createApiResponse = number => {
+  if (numbersDict[number]) {
+    numbersDict[number].last_datetime = numbersDict[number].datetime;
+    numbersDict[number].datetime = new Date();
+    numbersDict[number].occurrences++;
+    return JSON.stringify(numbersDict[number]);
+  }
+
+  const response = {
+    datetime: new Date(),
+    value: squareOfSum(number) - sumOfSquares(number),
+    number,
+    occurrences: 1,
+    last_datetime: null
+  };
+
+  numbersDict[number] = response;
+  return JSON.stringify(response);
+};
+
 const mockApi = number =>
   new Promise(resolve => {
-    return setTimeout(
-      () => resolve(squareOfSum(number) - sumOfSquares(number)),
-      1000
-    ); // Mocking some amount of latency.
+    return setTimeout(() => resolve(createApiResponse(number)), 1000); // Mocking some amount of latency.
   });
 
 function App() {
-  const [value, setValue] = React.useState(0);
-  const [submittedValue, setSubmittedValue] = React.useState(0);
+  const [value, setValue] = React.useState("");
+  const [submittedValue, setSubmittedValue] = React.useState("");
   const [error, setError] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [response, setResponse] = React.useState([]);
 
   React.useEffect(() => {
+    if (!submittedValue) return; // Guarding against my falsy default
     let didCancel = false;
+
     const mockServerCalculation = async () => {
       !didCancel && setLoading(true);
       const apiResponse = await mockApi(submittedValue);
-      console.log(apiResponse);
+      !didCancel &&
+        setResponse(prevResponse => [...prevResponse, JSON.parse(apiResponse)]);
       !didCancel && setLoading(false);
+      setSubmittedValue("");
     };
 
     mockServerCalculation();
@@ -68,8 +92,8 @@ function App() {
     }
 
     setError("");
-    setSubmittedValue(value);
-    setValue(0);
+    setSubmittedValue(Number(value));
+    setValue("");
   };
 
   if (loading) {
