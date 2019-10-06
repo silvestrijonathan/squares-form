@@ -21,12 +21,33 @@ const squareOfSum = number => {
 
 const mockApi = number =>
   new Promise(resolve => {
-    setTimeout(() => resolve(squareOfSum(number) - sumOfSquares(number)), 1000); // Mocking some amount of latency.
+    return setTimeout(
+      () => resolve(squareOfSum(number) - sumOfSquares(number)),
+      1000
+    ); // Mocking some amount of latency.
   });
 
 function App() {
   const [value, setValue] = React.useState(0);
+  const [submittedValue, setSubmittedValue] = React.useState(0);
   const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    let didCancel = false;
+    const mockServerCalculation = async () => {
+      !didCancel && setLoading(true);
+      const apiResponse = await mockApi(submittedValue);
+      console.log(apiResponse);
+      !didCancel && setLoading(false);
+    };
+
+    mockServerCalculation();
+
+    return () => {
+      didCancel = true;
+    };
+  }, [submittedValue]);
 
   const handleChange = event => {
     setValue(event.target.value);
@@ -47,8 +68,13 @@ function App() {
     }
 
     setError("");
-    console.log(value);
+    setSubmittedValue(value);
+    setValue(0);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <form onSubmit={handleSubmit}>
