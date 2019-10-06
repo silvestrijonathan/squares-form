@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
   const [value, setValue] = React.useState(0);
+  const [error, setError] = React.useState("");
 
   const handleChange = event => {
     setValue(event.target.value);
@@ -10,11 +11,25 @@ function App() {
 
   const handleSubmit = event => {
     event.preventDefault();
+    if (!Boolean(Number(value))) {
+      setError("You must enter a valid number between 0 and 100.");
+      return null;
+    }
+
+    if (value <= 0 || value > 100) {
+      setError(
+        "Your number must be greater than 0 and less than or equal to 100."
+      );
+      return null;
+    }
+
+    setError("");
     console.log(value);
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && <p>{error}</p>}
       <label htmlFor="number">
         Input a number:{" "}
         <input
